@@ -31,9 +31,13 @@ def get_security_score(chain, address, project_name=""):
 def fetch_scores_for_protocols(projects):
     print("Fetching protocol addresses from DeFiLlama...")
     try:
-        req = urllib.request.Request("https://api.llama.fi/protocols")
-        with urllib.request.urlopen(req) as res:
-            protocols = json.loads(res.read())
+        res = requests.get(
+            "https://api.llama.fi/protocols",
+            headers={"User-Agent": "Mozilla/5.0"},
+            timeout=30
+        )
+        res.raise_for_status()
+        protocols = res.json()
     except Exception as e:
         print(f"Failed to fetch DeFiLlama protocols: {e}")
         return
